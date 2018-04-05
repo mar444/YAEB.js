@@ -8,7 +8,7 @@ function match(pattern, input, bindings = NO_BINDINGS) {
         return matchVariable(pattern, input, bindings);
     } else if (isEqualAtom(pattern, input)) {
         return bindings;
-    } else if (Array.isArray(pattern)) {
+    } else if (isNonEmptyArray(pattern) && isNonEmptyArray(input)) {
         return match(pattern.slice(1), input.slice(1), match(pattern[0], input[0], bindings));
     } else {
         return FAIL;
@@ -23,6 +23,10 @@ function isEmptyArray(x) {
     return Array.isArray(x) && (x.length === 0);
 }
 
+function isNonEmptyArray(x) {
+    return Array.isArray(x) && (x.length > 0);
+}
+
 function isEqualAtom(pattern, input) {
     if (typeof pattern === typeof "string") {
         return pattern === input;
@@ -30,7 +34,6 @@ function isEqualAtom(pattern, input) {
         return isEmptyArray(pattern) && isEmptyArray(input);
     }
 }
-
 
 function matchVariable(pattern, input, bindings) {
     const binding = getBinding(pattern, bindings);
@@ -57,12 +60,12 @@ function bindingValue(binding) {
 }
 
 function extendBindings(variable, val, bindings) {
+    bindings = (bindings === NO_BINDINGS) ? [] : bindings;
     return bindings.concat([{
         var: variable, val
     }]);
 }
 
-console.log(match("hi ?x".split(' '), "hi 23".split(' ')));
 module.exports = {
     match
 };
