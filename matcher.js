@@ -8,6 +8,8 @@ function match(pattern, input, bindings = NO_BINDINGS) {
         return matchVariable(pattern, input, bindings);
     } else if (isEqualAtom(pattern, input)) {
         return bindings;
+    } else if (isNonEmptyArray(pattern) && isSegment(pattern[0])) {
+        return matchSegment(pattern, input, bindings);
     } else if (isNonEmptyArray(pattern) && isNonEmptyArray(input)) {
         return match(pattern.slice(1), input.slice(1), match(pattern[0], input[0], bindings));
     } else {
@@ -15,8 +17,16 @@ function match(pattern, input, bindings = NO_BINDINGS) {
     }
 }
 
+function isString(x) {
+    return (typeof x === typeof "string");
+}
+
 function isVariable(pattern) {
-    return ((typeof pattern === typeof "string") && pattern.startsWith("?"));
+    return isString(pattern) && pattern.startsWith("?");
+}
+
+function isSegment(pattern) {
+    return isString(pattern) && pattern.startsWith("(?") && pattern.endsWith(")");
 }
 
 function isEmptyArray(x) {
@@ -35,8 +45,8 @@ function isEqualAtom(pattern, input) {
     }
 }
 
-function matchVariable(pattern, input, bindings) {
-    const binding = getBinding(pattern, bindings);
+function matchVariable(variable, input, bindings) {
+    const binding = getBinding(variable, bindings);
     if (binding) {
         const value = bindingValue(binding);
         if (value === input) {
@@ -45,7 +55,28 @@ function matchVariable(pattern, input, bindings) {
             return FAIL;
         }
     } else {
-        return extendBindings(pattern, input, bindings);
+        return extendBindings(variable, input, bindings);
+    }
+}
+
+function matchSegment(pattern, input, bindings, fromIdx = 0) {
+    const variable = pattern[0].slice(-3, -1);
+    const pat = pattern.slice(1);
+
+    if (isEmptyArray(pat)) {
+        return matchVariable(variable, input, bindings);
+    }
+
+    const pos = input.indexOf(pat[0], fromIdx);
+    if (pos !== -1) {
+        const matchResult = match(pat, input.slice(pos), extendBindings(variable, input.slice(0, pos) , bindings));
+        if (matchResult === FAIL) {
+            return matchSegment(pattern, input, bindings, pos + 1);
+        } else {
+            return matchResult;
+        }
+    } else {
+        return FAIL;
     }
 }
 

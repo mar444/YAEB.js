@@ -1,8 +1,14 @@
 module.exports = [
     {
-        pattern: "hi ?x",
+        pattern: "(?x) hello (?y)",
         responses: [
-            "hi"
+            "How do you do.  Please state your problem."
+        ]
+    },
+    {
+        pattern: "(?x) I (?y) you (?z)",
+        responses: [
+            "Perhaps in your fantasy we ?y each other"
         ]
     }
 ];
