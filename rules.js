@@ -10,5 +10,12 @@ module.exports = [
         responses: [
             "Perhaps in your fantasy we ?y each other"
         ]
+    },
+    {
+        pattern: "(?x) I want (?y)",
+        responses: [
+            "What would it mean if you got ?y",
+            "Why do you want ?y"
+        ]
     }
 ];

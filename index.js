@@ -21,7 +21,8 @@ rl.on('line', (line) => {
                 {newKey: 'replacement', oldKey: 'val'}
             ]);
 
-            console.log(utils.sublis(replaceRules, randomRes).join(' '));
+            console.log(utils.flatten(utils.sublis(replaceRules, randomRes)).join(' '));
+            return true;
         }
     });
 

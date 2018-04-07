@@ -25,8 +25,23 @@ function randomElt(list) {
     return list[Math.floor(Math.random() * list.length)];
 }
 
+function mklist(x) {
+    return Array.isArray(x) ? x : [x];
+}
+
+function mappend(list, fn) {
+    return list.map(fn).reduce((acc, cur) => {
+        return acc.concat(cur);
+    }, []);
+}
+
+function flatten(list) {
+    return mappend(list, mklist);
+}
+
 module.exports = {
     changeKeys,
     sublis,
-    randomElt
+    randomElt,
+    flatten
 };
