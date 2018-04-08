@@ -24,5 +24,11 @@ module.exports = [
             "Why do you ask?",
             "What do you think?"
         ]
+    },
+    {
+        pattern: "(?x) perhaps (?y)",
+        responses: [
+            "You do not seem quite certain"
+        ]
     }
 ];
