@@ -17,5 +17,12 @@ module.exports = [
             "What would it mean if you got ?y",
             "Why do you want ?y"
         ]
+    },
+    {
+        pattern: "(?x) what (?y)",
+        responses: [
+            "Why do you ask?",
+            "What do you think?"
+        ]
     }
 ];
